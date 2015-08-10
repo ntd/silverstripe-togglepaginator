@@ -39,6 +39,6 @@ This project has been developed by [ntd](mailto:ntd@entidi.it). Its
 [SilverStripe](http://www.silverstripe.org/) modules and themes.
 
 To check out the code, report issues or propose enhancements, go to the
-[dedicated tracker](http://dev.entidi.com/p/silverstripe-togglenavigator).
+[dedicated tracker](http://dev.entidi.com/p/silverstripe-togglepaginator).
 Alternatively, you can do the same things by leveraging the official
-[github repository](https://github.com/ntd/silverstripe-togglenavigator).
+[github repository](https://github.com/ntd/silverstripe-togglepaginator).
