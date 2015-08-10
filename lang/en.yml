@@ -1,0 +1,4 @@
+en:
+  GridFieldTogglePaginator:
+    ENABLE: 'Enable pagination'
+    DISABLE: 'Disable pagination'
