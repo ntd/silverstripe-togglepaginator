@@ -1,11 +1,11 @@
 SilverStripe Toggle-Paginator
 =============================
 
-A module that provides a _GridField_ component for temporarily switch
+A module that provides a _GridField_ component for temporarily switching
 the pagination on or off. This can be especially useful when used in
 conjunction with other modules, e.g. I am currently using it with
 [gridfieldmultiselect](https://github.com/markguinn/silverstripe-gridfieldmultiselect)
-to execute special actions to a filtered subset of records.
+to execute special actions on a filtered subset of records.
 
 Installation
 ------------
