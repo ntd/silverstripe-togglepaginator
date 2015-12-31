@@ -1,6 +1,7 @@
 <?php
 
-class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_ActionProvider {
+class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_ActionProvider
+{
 
     /**
      * The icon to use on the enable pagination button. Can be null.
@@ -30,7 +31,8 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
     protected $state;
 
 
-    public function __construct($target = 'buttons-before-right') {
+    public function __construct($target = 'buttons-before-right')
+    {
         $this->target = $target;
     }
 
@@ -42,9 +44,11 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
      * The current implementation is borrowed directly from
      * GridField_FormAction::getAttributes() 3.2.0-beta2.
      */
-    protected function updateState($grid) {
-        if (isset($this->state_id))
+    protected function updateState($grid)
+    {
+        if (isset($this->state_id)) {
             return;
+        }
 
         $state = array(
             'grid'       => $grid->getName(),
@@ -73,7 +77,8 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
      * @param  GridField $grid The subject GridField instance
      * @return array           An associative array of target => fragment
      */
-    public function getHTMLFragments($grid) {
+    public function getHTMLFragments($grid)
+    {
         $this->updateState($grid);
 
         $active = $this->state['active'];
@@ -91,7 +96,8 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
         );
     }
 
-    public function getActions($grid) {
+    public function getActions($grid)
+    {
         return array('toggle');
     }
 
@@ -105,7 +111,8 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
      *
      * @throws InvalidArgumentException
      */
-    public function handleAction(GridField $grid, $action, $arguments, $data) {
+    public function handleAction(GridField $grid, $action, $arguments, $data)
+    {
         switch ($action) {
 
         case 'toggle':
@@ -120,7 +127,8 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
         }
     }
 
-    public function handleToggle($grid, $request = null) {
+    public function handleToggle($grid, $request = null)
+    {
         $this->updateState($grid);
         $this->state['active'] = ! $this->state['active'];
         Session::set($this->state_id, $this->state);
