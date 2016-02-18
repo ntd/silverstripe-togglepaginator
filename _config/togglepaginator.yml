@@ -2,7 +2,6 @@
 Name: togglepaginator
 After:
     - 'framework/*'
-    - 'cms/*'
 ---
 GridFieldTogglePaginator:
     enable_icon: 'arrow-circle-135-left'

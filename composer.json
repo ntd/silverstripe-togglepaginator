@@ -1,9 +1,9 @@
 {
     "name": "entidi/silverstripe-togglepaginator",
-    "description": " A GridField component that provides a way to enable/disable the pagination",
+    "description": "Allow to enable/disable the GridField pagination with one click",
     "type": "silverstripe-module",
     "homepage": "http://silverstripe.entidi.com/",
-    "keywords": ["silverstripe", "gridfield", "pagination", "GridFieldPaginator"],
+    "keywords": ["silverstripe", "gridfield", "pagination", "paginator", "GridFieldPaginator", "toggle"],
     "license": "BSD-2-Clause",
     "authors": [
         {

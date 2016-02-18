@@ -1,7 +1,16 @@
 <?php
 
-class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_ActionProvider {
-
+/**
+ * A GridField component that allows to temporary disable the
+ * pagination.
+ *
+ * It should be included before the GridFieldPaginator component that
+ * must be present (otherwise this class would be pretty useless).
+ *
+ * @package silverstripe-togglepaginator
+ */
+class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator
+{
     /**
      * The icon to use on the enable pagination button. Can be null.
      * @config
@@ -30,7 +39,8 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
     protected $state;
 
 
-    public function __construct($target = 'buttons-before-right') {
+    public function __construct($target = 'buttons-before-right')
+    {
         $this->target = $target;
     }
 
@@ -42,9 +52,11 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
      * The current implementation is borrowed directly from
      * GridField_FormAction::getAttributes() 3.2.0-beta2.
      */
-    protected function updateState($grid) {
-        if (isset($this->state_id))
+    protected function updateState($grid)
+    {
+        if (isset($this->state_id)) {
             return;
+        }
 
         $state = array(
             'grid'       => $grid->getName(),
@@ -63,17 +75,13 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
     }
 
     /**
-     * Update $state and $state_id properties.
+     * Implements the GridField_HTMLProvider interface.
      *
-     * If the $state array does not exist in the session, create it.
-     *
-     * The current implementation is borrowed directly from
-     * GridField_FormAction::getAttributes() 3.2.0-beta2.
-     *
-     * @param  GridField $grid The subject GridField instance
-     * @return array           An associative array of target => fragment
+     * @param  GridField $grid
+     * @return array
      */
-    public function getHTMLFragments($grid) {
+    public function getHTMLFragments($grid)
+    {
         $this->updateState($grid);
 
         $active = $this->state['active'];
@@ -91,12 +99,22 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
         );
     }
 
-    public function getActions($grid) {
+    /**
+     * Required by the GridField_ActionProvider interface.
+     *
+     * @param  GridField $grid
+     * @return array
+     */
+    public function getActions($grid)
+    {
         return array('toggle');
     }
 
     /**
      * Handle the action.
+     *
+     * It swithces the "state" flag and saves the data into a session
+     * variable for later reuse.
      *
      * @param  GridField $grid      The subject GridField instance
      * @param  string    $action    The action name (lowercase!)
@@ -105,11 +123,14 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
      *
      * @throws InvalidArgumentException
      */
-    public function handleAction(GridField $grid, $action, $arguments, $data) {
+    public function handleAction(GridField $grid, $action, $arguments, $data)
+    {
         switch ($action) {
 
         case 'toggle':
-            $this->handleToggle($grid);
+            $this->updateState($grid);
+            $this->state['active'] = ! $this->state['active'];
+            Session::set($this->state_id, $this->state);
             break;
 
         default:
@@ -120,17 +141,25 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
         }
     }
 
-    public function handleToggle($grid, $request = null) {
+    /**
+     * Required by the GridField_DataManipulator interface.
+     *
+     * Disable pagination on the GridFieldPaginator component, if
+     * required by the current "state" flag. It must be called before
+     * GridFieldPaginator::getManipulatedData() to take effect, hence
+     * the requirement that GridFieldTogglePaginator must be added
+     * before GridFieldPaginator.
+     *
+     * @param  GridField $grid
+     * @return SS_List
+     */
+    public function getManipulatedData(GridField $grid, SS_List $list)
+    {
         $this->updateState($grid);
-        $this->state['active'] = ! $this->state['active'];
-        Session::set($this->state_id, $this->state);
-
-        $component = $grid->getConfig()->getComponentByType('GridFieldPaginator');
-        if ($this->state['active']) {
-            $page_size = Config::inst()->get('GridFieldPaginator', 'default_items_per_page');
-        } else {
-            $page_size = PHP_INT_MAX;
+        if (! $this->state['active']) {
+            $grid->getConfig()->getComponentByType('GridFieldPaginator')
+                ->setItemsPerPage(PHP_INT_MAX);
         }
-        $component->setItemsPerPage($page_size);
+        return $list;
     }
 }

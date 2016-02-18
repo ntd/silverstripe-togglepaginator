@@ -1,5 +1,8 @@
 SilverStripe Toggle-Paginator
 =============================
+[![Code Quality](https://scrutinizer-ci.com/g/ntd/silverstripe-togglepaginator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ntd/silverstripe-togglepaginator/?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/entidi/silverstripe-togglepaginator/v/stable)](https://packagist.org/packages/entidi/silverstripe-togglepaginator)
+
 
 A module that provides a _GridField_ component for temporarily switching
 the pagination on or off. This can be especially useful when used in
@@ -22,9 +25,12 @@ Usage
 -----
 
 Just add the component to the grid field you want disable the pagination
-on, e.g.:
+on, ensuring it is added *before* _GridFieldPaginator_, e.g.:
 
-    $grid->getConfig()->addComponent(new GridFieldTogglePaginator());
+    $grid->getConfig()->addComponent(
+        new GridFieldTogglePaginator(),
+        'GridFieldPaginator'
+    );
 
 This by default will add a button on the top right corner of every grid
 field instance (this can be overriden by providing a different target
