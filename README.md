@@ -22,9 +22,12 @@ Usage
 -----
 
 Just add the component to the grid field you want disable the pagination
-on, e.g.:
+on, ensuring it is added *before* _GridFieldPaginator_, e.g.:
 
-    $grid->getConfig()->addComponent(new GridFieldTogglePaginator());
+    $grid->getConfig()->addComponent(
+        new GridFieldTogglePaginator(),
+        'GridFieldPaginator'
+    );
 
 This by default will add a button on the top right corner of every grid
 field instance (this can be overriden by providing a different target
