@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * A GridField component that allows to temporary disable the
+ * pagination.
+ *
+ * It should be included before the GridFieldPaginator component that
+ * must be present (otherwise this class would be pretty useless).
+ *
+ * @package silverstripe-togglepaginator
+ */
 class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator
 {
     /**
@@ -65,6 +74,12 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
         }
     }
 
+    /**
+     * Implements the GridField_HTMLProvider interface.
+     *
+     * @param  GridField $grid
+     * @return array
+     */
     public function getHTMLFragments($grid)
     {
         $this->updateState($grid);
@@ -84,6 +99,12 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
         );
     }
 
+    /**
+     * Required by the GridField_ActionProvider interface.
+     *
+     * @param  GridField $grid
+     * @return array
+     */
     public function getActions($grid)
     {
         return array('toggle');
@@ -91,6 +112,9 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
 
     /**
      * Handle the action.
+     *
+     * It swithces the "state" flag and saves the data into a session
+     * variable for later reuse.
      *
      * @param  GridField $grid      The subject GridField instance
      * @param  string    $action    The action name (lowercase!)
@@ -104,7 +128,9 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
         switch ($action) {
 
         case 'toggle':
-            $this->handleToggle($grid);
+            $this->updateState($grid);
+            $this->state['active'] = ! $this->state['active'];
+            Session::set($this->state_id, $this->state);
             break;
 
         default:
@@ -115,13 +141,18 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
         }
     }
 
-    public function handleToggle($grid, $request = null)
-    {
-        $this->updateState($grid);
-        $this->state['active'] = ! $this->state['active'];
-        Session::set($this->state_id, $this->state);
-    }
-
+    /**
+     * Required by the GridField_DataManipulator interface.
+     *
+     * Disable pagination on the GridFieldPaginator component, if
+     * required by the current "state" flag. It must be called before
+     * GridFieldPaginator::getManipulatedData() to take effect, hence
+     * the requirement that GridFieldTogglePaginator must be added
+     * before GridFieldPaginator.
+     *
+     * @param  GridField $grid
+     * @return SS_List
+     */
     public function getManipulatedData(GridField $grid, SS_List $list)
     {
         $this->updateState($grid);
