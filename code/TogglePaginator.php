@@ -51,6 +51,8 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
      *
      * The current implementation is borrowed directly from
      * GridField_FormAction::getAttributes() 3.2.0-beta2.
+     *
+     * @param GridField $grid
      */
     protected function updateState($grid)
     {
@@ -107,7 +109,9 @@ class GridFieldTogglePaginator implements GridField_HTMLProvider, GridField_Acti
      */
     public function getActions($grid)
     {
-        return array('toggle');
+        return array(
+            'toggle',
+        );
     }
 
     /**
